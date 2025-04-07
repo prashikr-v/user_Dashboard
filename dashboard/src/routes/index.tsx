@@ -1,7 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import axios from 'axios';
 import '../index.css'
-import { useState, useEffect, Key,  } from 'react'
+import { useState, useEffect, Key, } from 'react'
+import { BsThreeDots } from "react-icons/bs";
 import { useQuery } from '@tanstack/react-query'
 import {
     Table,
@@ -11,12 +12,16 @@ import {
     Alert,
     Stack,
     Title,
+    Button,
+    Menu,
+    Group,
 } from '@mantine/core'
 import { useNavigate } from '@tanstack/react-router'
+import { Forms } from '../components/form';
 export const Route = createFileRoute('/')({
     component: HomePage,
 })
-const fetchUsers = async () => {
+export const fetchUsers = async () => {
     const { data } = await axios.get('https://jsonplaceholder.typicode.com/users');
     return data;
 };
@@ -44,6 +49,30 @@ export default function HomePage() {
     const debouncedSearch = useDebounce(searchTerm, 500)
     const [activePage, setActivePage] = useState(1)
     const itemsPerPage = 5
+    const [formOpened, setFormOpened] = useState(false);
+    const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
+    const [selectedUser, setSelectedUser] = useState<any>(null);
+
+    const handleEdit = (user: any) => {
+        setSelectedUser(user);
+        setFormMode('edit');
+        setFormOpened(true);
+    };
+
+    const handleAdd = () => {
+        setSelectedUser({
+            name: '',
+            username: '',
+            email: '',
+            phone: '',
+            website: '',
+            address: { street: '', city: '' },
+            company: { name: '' }
+        });
+        setFormMode('add');
+        setFormOpened(true);
+    };
+
 
     const { data, isLoading, isError } = useQuery({
         queryKey: ['users'],
@@ -73,7 +102,7 @@ export default function HomePage() {
     }
     return (
 
-        <Stack p="md">
+        <Stack p="md"m="30px" >
             <>
                 <Title order={1}>Users</Title>
                 <TextInput
@@ -96,12 +125,30 @@ export default function HomePage() {
                         {paginatedUsers.map((user: { id: Key; name: string; email: string; }) => (
                             <Table.Tr
                                 key={user.id}
-                                onClick={() => navigate({ to: '/user/$id', params: { id: user.id } })}
+                                onClick={() => { navigate({ to: '/user/$id', params: { id: `${user.id}` } }) }}
                                 style={{ cursor: 'pointer' }}
                             >
 
                                 <Table.Td>{user.name}</Table.Td>
                                 <Table.Td>{user.email}</Table.Td>
+                                <Table.Td> <Menu >
+                                    <Menu.Target>
+                                        <Button onClick={(e) => e.stopPropagation()}><BsThreeDots /></Button>
+                                    </Menu.Target>
+
+                                    <Menu.Dropdown>
+                                        <Menu.Item
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleEdit(user);
+                                            }}
+                                        >
+                                            Edit
+                                        </Menu.Item>
+
+
+                                    </Menu.Dropdown>
+                                </Menu></Table.Td>
                             </Table.Tr>
                         ))}
                     </Table.Tbody>
@@ -112,8 +159,22 @@ export default function HomePage() {
                     onChange={setActivePage}
                     total={Math.ceil(filteredUsers.length / itemsPerPage)}
                     mt="md"
-                    ml="400px"
+                    ml="550px"
                 />
+                <Group>
+                <Button onClick={handleAdd}  variant="light" size="md" ml={580} radius="md" >Add User</Button>
+                </Group>
+                <Forms
+                    initialValues={selectedUser}
+                    mode={formMode}
+                    opened={formOpened}
+                    onClose={() => setFormOpened(false)}
+                    onSubmit={(data) => {
+                        console.log('Submitted:', data);
+                        setFormOpened(false);
+                    }}
+                />
+
             </>
 
         </Stack>

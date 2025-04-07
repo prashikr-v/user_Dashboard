@@ -8,17 +8,18 @@ import axios from 'axios';
 import { useParams } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { Card, Loader, Text } from '@mantine/core';
+import { fetchUsers } from '..';
 
-const fetch = async () => {
-  const { data } = await axios.get('https://jsonplaceholder.typicode.com/users');
-  return data;
-};
+// const fetch = async () => {
+//   const { data } = await axios.get('https://jsonplaceholder.typicode.com/users');
+//   return data;
+// };
 
 export default function UserDetails() {
   const { id } = useParams({ strict: false });
   const { data, isLoading, isError } = useQuery({
     queryKey: ['users'],
-    queryFn: fetch,
+    queryFn: fetchUsers,
   });
 
   const user = data?.find((u: any) => u.id === Number(id));
