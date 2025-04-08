@@ -43,6 +43,7 @@ function useDebounce(value: string, delay: number) {
     return debouncedValue
 }
 
+
 export default function HomePage() {
     const navigate = useNavigate()
     const [searchTerm, setSearchTerm] = useState('')
@@ -52,6 +53,10 @@ export default function HomePage() {
     const [formOpened, setFormOpened] = useState(false);
     const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
     const [selectedUser, setSelectedUser] = useState<any>(null);
+//     useEffect(() => {
+//   // 🐞 Force an error for testing
+//   throw new Error("Intentional error for testing ErrorBoundary");
+// }, []);
 
     const handleEdit = (user: any) => {
         setSelectedUser(user);
@@ -100,6 +105,7 @@ export default function HomePage() {
             </div> </>
         )
     }
+    
     return (
 
         <Stack p="md"m="30px" >
@@ -174,7 +180,7 @@ export default function HomePage() {
                         setFormOpened(false);
                     }}
                 />
-
+    
             </>
 
         </Stack>
