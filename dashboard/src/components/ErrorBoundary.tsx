@@ -36,7 +36,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <div>Were sorry, something broke. Please try again.</div>
           <Button mt="md" onClick={this.handleReload}>
             Reload Page
-          </Button>
+          </Button> 
         </Alert>
       );
     }
