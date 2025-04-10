@@ -58,7 +58,7 @@ export const fetchUsers = async () => {
     return data;
 };
 export const fetchUsersPaginated = async ({ pageParam = 1 }) => {
-    const { data } = await axios.get(
+    const { data } = await axiosInstance.get(
         `https://jsonplaceholder.typicode.com/users?_limit=5&_page=${pageParam}`
     );
     return data;

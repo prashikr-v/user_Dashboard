@@ -15,7 +15,7 @@ import { fetchUsers } from '..';
 export default function UserDetails() {
   const { id } = useParams({ strict: false });
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['users'],
+    queryKey: ['all-users'],
     queryFn: fetchUsers,
   });
 
