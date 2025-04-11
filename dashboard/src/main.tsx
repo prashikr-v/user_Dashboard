@@ -6,6 +6,8 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MantineProvider } from '@mantine/core'
+import '@mantine/core/styles.css';
+import { ErrorBoundary } from "react-error-boundary";
 
 // Create a new router instance
 const router = createRouter({ routeTree })
@@ -24,11 +26,14 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
+      <ErrorBoundary fallback={<div>Sbygbhomething went wrong</div>}>
       <QueryClientProvider client={queryClient}>
       <MantineProvider >
       <RouterProvider router={router} />
+      
       </MantineProvider>
       </QueryClientProvider>
-    </StrictMode>,
+      </ErrorBoundary>
+    </StrictMode>
   )
 }
